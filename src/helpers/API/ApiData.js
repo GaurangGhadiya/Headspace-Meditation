@@ -1,7 +1,8 @@
 import { API } from "../../config/API/api.config";
 import Auth from "../Auth";
 import * as authUtil from "../../utils/auth.util";
-export const BaseURL = API.endpoint + "/";
+export const BaseURL =
+         "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com";
 export const Bucket =
   "https://grubgrams.s3.amazonaws.com/";
 const axios = require("axios").default;
@@ -19,7 +20,8 @@ const signout = () => {
 }
 
 export const ApiPostNoAuth = (type, userData) => {
-  // console.log("In api post without auth", API);
+  // console.log("In api post without auth", API); BaseURL + type
+  console.log(" BaseURL + type", BaseURL + type);
   return new Promise((resolve, reject) => {
     axios
       .post(
@@ -40,9 +42,9 @@ export const ApiPostNoAuth = (type, userData) => {
           error.response.data.hasOwnProperty("error") &&
           error.response.data.error
         ) {
-          reject(error.response.data);
+          reject(error?.response?.data);
         } else {
-          reject(error.response.data);
+          reject(error?.response?.data);
         }
       });
   });
@@ -159,19 +161,19 @@ console.log(i)
     return extracol
 }
 export const ApiGet = (type) => {
-  const Id = JSON.parse(localStorage.getItem("userinfo"));
-  let ext = "";
+  // const Id = JSON.parse(localStorage.getItem("userinfo"));
+  // let ext = "";
 
-  if (Id?.userType == 1) {
-    ext = "admin";
-  } else if (Id?.userType == 2) {
-    ext = "store_owner";
-  } else {
-    ext = "admin";
-  }
+  // if (Id?.userType == 1) {
+  //   ext = "admin";
+  // } else if (Id?.userType == 2) {
+  //   ext = "store_owner";
+  // } else {
+  //   ext = "admin";
+  // }
   return new Promise((resolve, reject) => {
     axios
-      .get(BaseURL + ext + type, getHttpOptions())
+      .get(BaseURL  + type, getHttpOptions())
       .then((responseJson) => {
         resolve(responseJson);
       })
@@ -193,28 +195,28 @@ export const ApiGet = (type) => {
           
           // console.log(error.response.data);
         } else {
-          reject(error.response.data);
-          console.log(error.response.data);
+          reject(error?.response?.data);
+          console.log(error?.response?.data);
         }
       });
   });
 };
 
 export const ApiPost = (type, userData, AdditionalHeader) => {
-  const Id = JSON.parse(localStorage.getItem("userinfo"));
-  let ext = "";
+  // const Id = JSON.parse(localStorage.getItem("userinfo"));
+  // let ext = "";
 
-  if (Id?.userType == 1) {
-    ext = "admin";
-  } else if (Id?.userType == 2) {
-    ext = "store_owner";
-  } else {
-    ext = "admin";
-  }
+  // if (Id?.userType == 1) {
+  //   ext = "admin";
+  // } else if (Id?.userType == 2) {
+  //   ext = "store_owner";
+  // } else {
+  //   ext = "admin";
+  // }
   return new Promise((resolve, reject) => {
     // console.log("dataBody", BaseURL);
     axios
-      .post(BaseURL + ext + type, userData, {
+      .post(BaseURL + type, userData, {
         ...getHttpOptions(),
         ...AdditionalHeader,
       })
@@ -244,19 +246,10 @@ export const ApiPost = (type, userData, AdditionalHeader) => {
 };
 
 export const ApiPut = (type, userData) => {
-  const Id = JSON.parse(localStorage.getItem("userinfo"));
-  let ext = "";
-
-  if (Id?.userType == 1) {
-    ext = "admin";
-  } else if (Id?.userType == 2) {
-    ext = "store_owner";
-  } else {
-    ext = "admin";
-  }
+ 
   return new Promise((resolve, reject) => {
     axios
-      .put(BaseURL + ext + type, userData, getHttpOptions())
+      .put(BaseURL + type, userData, getHttpOptions())
       .then((responseJson) => {
         resolve(responseJson);
       })
@@ -340,19 +333,10 @@ export const ApiPatch = (type, userData) => {
 };
 
 export const ApiDelete = (type, userData) => {
-  const Id = JSON.parse(localStorage.getItem("userinfo"));
-  let ext = "";
-
-  if (Id?.userType == 1) {
-    ext = "admin";
-  } else if (Id?.userType == 2) {
-    ext = "store_owner";
-  } else {
-    ext = "admin";
-  }
+ 
   return new Promise((resolve, reject) => {
     axios
-      .delete(BaseURL + ext + type, getHttpOptions())
+      .delete(BaseURL + type, getHttpOptions())
       .then((responseJson) => {
         resolve(responseJson);
       })

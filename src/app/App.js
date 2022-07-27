@@ -10,6 +10,9 @@ import { Routes } from "../app/Routes";
 import { I18nProvider } from "../_metronic/i18n";
 import { LayoutSplashScreen, MaterialThemeProvider } from "../_metronic/layout";
 import toast, { Toaster } from "react-hot-toast";
+import "antd/dist/antd.css";
+
+// import "react-table/react-table.css";
 
 export default function App({ store, persistor, basename }) {
   return (

@@ -1,18 +1,28 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid,no-undef */
-import React from "react";
+import React, {useState, useEffect} from "react";
 import SVG from "react-inlinesvg";
 import { useHistory } from "react-router-dom";
 import { toAbsoluteUrl } from "../../../../_helpers";
 
 export function QuickUser() {
+  const [userData, setuserData] = useState({})
   const history = useHistory();
+
+  useEffect(() => {
+    if(localStorage.getItem("userinfo")){
+      setuserData(JSON.parse(localStorage.getItem("userinfo")));
+    }
+  }, [])
+  console.log("userData", userData);
+
 
   const logoutClick = () => {
     const toggle = document.getElementById("kt_quick_user_toggle");
     if (toggle) {
       toggle.click();
     }
-    history.push("/logout");
+    localStorage.clear()
+    window.location.pathname = "/logout"
   };
 
   return (
@@ -49,9 +59,9 @@ export function QuickUser() {
               href="#"
               className="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"
             >
-              Headspace
+              {userData?.firstName}
             </a>
-            <div className="text-muted mt-1">Admin</div>
+            {/* <div className="text-muted mt-1">{userData?.firstName}</div> */}
             <div className="navi mt-2">
               <a href="#" className="navi-item">
                 <span className="navi-link p-0 pb-2">
@@ -65,7 +75,7 @@ export function QuickUser() {
                     </span>
                   </span>
                   <span className="navi-text text-muted text-hover-primary">
-                    admin@demo.com
+                    {userData?.email}
                   </span>
                 </span>
               </a>

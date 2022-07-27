@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import objectPath from "object-path";
@@ -10,6 +10,8 @@ import { UserProfileDropdown } from "./dropdowns/UserProfileDropdown";
 export function QuickUserToggler() {
   const { user } = useSelector((state) => state.auth);
   const uiService = useHtmlClassService();
+    const [userData, setuserData] = useState({});
+
   const layoutProps = useMemo(() => {
     return {
       offcanvas:
@@ -17,6 +19,11 @@ export function QuickUserToggler() {
     };
   }, [uiService]);
 
+    useEffect(() => {
+      if (localStorage.getItem("userinfo")) {
+        setuserData(JSON.parse(localStorage.getItem("userinfo")));
+      }
+    }, []);
   return (
     <>
       {layoutProps.offcanvas && (
@@ -34,11 +41,12 @@ export function QuickUserToggler() {
                   Hi,
                 </span>
                 <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-                  Headspace
+                  {userData?.firstName}
                 </span>
                 <span className="symbol symbol-35 symbol-light-success">
                   <span className="symbol-label font-size-h5 font-weight-bold">
-                    H
+                    {/* {userData?.firstName[0] ?? "A"} */}
+                    A
                   </span>
                 </span>
               </>

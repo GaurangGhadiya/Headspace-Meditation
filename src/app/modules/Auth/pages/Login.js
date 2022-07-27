@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
+import { ApiPostNoAuth} from "../../../../helpers/API/ApiData"
+
+import * as userUtil from "../../../../utils/user.util";
+import * as authUtil from "../../../../utils/auth.util";
+import { ErrorToast, SuccessToast } from "../../../../helpers/Toast";
+
 
 /*
   INTL (i18n) docs:
@@ -18,12 +24,13 @@ import { login } from "../_redux/authCrud";
 */
 
 const initialValues = {
-  email: "admin@demo.com",
-  password: "demo",
+  email: "admin@gmail.com",
+  password: "meditationadmin",
 };
 
 function Login(props) {
   const { intl } = props;
+  const history = useHistory()
   const [loading, setLoading] = useState(false);
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -70,22 +77,28 @@ function Login(props) {
     validationSchema: LoginSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
       enableLoading();
-      setTimeout(() => {
-        login(values.email, values.password)
-          .then(({ data: { accessToken } }) => {
-            disableLoading();
-            props.login(accessToken);
-          })
-          .catch(() => {
-            disableLoading();
-            setSubmitting(false);
-            setStatus(
-              intl.formatMessage({
-                id: "AUTH.VALIDATION.INVALID_LOGIN",
+      ApiPostNoAuth("/admin/login", initialValues)
+        .then((res) => {
+                        SuccessToast(res && res.data && res.data.message);
+
+                console.log("res", res);
+                userUtil.setUserInfo(res?.data?.data);
+                authUtil.setToken(res?.data?.data?.token);
+                disableLoading();
+                // props.login({
+                //   token: res?.data?.data?.token,
+                //   user: initialValues,
+                // });
+                window.location.pathname = "/dashboard";
               })
-            );
-          });
-      }, 1000);
+        .catch((e) => {
+                        ErrorToast(e?.message);
+
+                          disableLoading();
+
+          console.log("e", e);
+        });
+
     },
   });
 

@@ -1,5 +1,6 @@
-const protocol = "https";
-const host = "api.grubgrams.com";
+const protocol = "http";
+const host =
+  "meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com";
 const port = "";
 const trailUrl = "";
 

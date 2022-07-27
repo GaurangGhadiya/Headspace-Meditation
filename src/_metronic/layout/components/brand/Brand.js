@@ -30,7 +30,7 @@ export function Brand() {
         {/* begin::Logo */}
         {/* <Link to="" className="brand-logo"> */}
         {/* <img alt="logo" src={layoutProps.headerLogo}/> */}
-        <h2> Headspace</h2>
+        <h2 className="text-white"> Headspace</h2>
         {/* </Link> */}
         {/* end::Logo */}
 
