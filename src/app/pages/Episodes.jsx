@@ -146,7 +146,7 @@ const [document, setDocument] = useState("")
     defaultFileList: [
       {
         uid: "1",
-        name: "audio file",
+        name: "image",
         status: "done",
         url: updateData?.image,
         // url:
