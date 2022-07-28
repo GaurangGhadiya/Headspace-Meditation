@@ -148,7 +148,7 @@ const [document, setDocument] = useState("")
         uid: "1",
         name: "audio file",
         status: "done",
-        url: updateData?.audio,
+        url: updateData?.image,
         // url:
         //   "https://meditation-abhi.s3.us-west-1.amazonaws.com/6238af81504e4d302cf97444/category/1648052228552.png",
       },
@@ -162,7 +162,7 @@ const [document, setDocument] = useState("")
       };
       axios
         .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/audio",
+          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/episode",
           data,
           {
             headers: headers,
@@ -185,7 +185,7 @@ const [document, setDocument] = useState("")
       console.log(info.fileList);
     },
   };
-  const propsDocs2 = {
+  const propsDocs1 = {
     name: "file",
     maxCount: 1,
     accept: ".mp3,.mpeg,audio/*",
@@ -197,7 +197,7 @@ const [document, setDocument] = useState("")
         uid: "1",
         name: "audio file",
         status: "done",
-        url: updateData?.audio,
+        url: updateData?.audioOrVideo,
         // url:
         //   "https://meditation-abhi.s3.us-west-1.amazonaws.com/6238af81504e4d302cf97444/category/1648052228552.png",
       },
@@ -285,13 +285,14 @@ const [document, setDocument] = useState("")
     console.log("Success:", values);
 
     const body = {
-      categoryId: window.location.pathname?.split("/")[2],
+      courseId: window.location.pathname?.split("/")[2],
       title: values?.title,
-      audio: image,
+      image: image,
       description: values?.description,
-      audioId: updateData?._id,
+      episodeId: updateData?._id,
+      audioOrVideo :document
     };
-    ApiPut("/audio/update", body).then(async (res) => {
+    ApiPut("/admin/episode/update", body).then(async (res) => {
       console.log("res add", res);
       await getData();
       //  setupdateData(values);
@@ -565,13 +566,13 @@ const [document, setDocument] = useState("")
             </Form.Item>
             <Form.Item label="Audio Or Video">
               <Form.Item
-                name="dragger"
-                valuePropName="fileList"
+                name="dragger1"
+                valuePropName="fileList1"
                 getValueFromEvent={normFileDoc2}
                 //   noStyle
                 // rules={[{ required: true, message: "file upload is requried" }]}
               >
-                <Upload.Dragger {...propsDocs2}>
+                <Upload.Dragger {...propsDocs1}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
