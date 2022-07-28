@@ -34,7 +34,7 @@ const Episodes = () => {
   const [videoId, setvideoId] = useState("");
   const [data, setdata] = useState([]);
   const [image, setimage] = useState("");
-
+const [document, setDocument] = useState("")
   const history = useHistory();
 
   const getData = async () => {
@@ -42,7 +42,7 @@ const Episodes = () => {
       page: 1,
       limit: 10,
     };
-    await ApiGet("/audio", body)
+    await ApiGet("/admin/episode")
       .then((res) => {
         console.log("res", res);
         setdata(res?.data?.data);
@@ -59,7 +59,7 @@ const Episodes = () => {
   const props = {
     name: "file",
     maxCount: 1,
-    accept: ".mp3,.mpeg,audio/*",
+    accept: "image/*",
     listType: "picture",
 
     // action: "https://jitsi.api.pip-idea.tk/admin/upload/compress_image/profile",
@@ -71,9 +71,13 @@ const Episodes = () => {
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post("https://api.meditatewithabhi.com/upload/audio", data, {
-          headers: headers,
-        })
+        .post(
+          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/episode",
+          data,
+          {
+            headers: headers,
+          }
+        )
         .then((res) => {
           console.log("res image", res);
           setimage(res?.data?.data?.image);
@@ -91,9 +95,97 @@ const Episodes = () => {
       console.log(info.fileList);
     },
   };
+  const propsDocs = {
+    name: "file",
+    maxCount: 1,
+    accept: ".mp3,.mpeg,audio/*",
+    listType: "picture",
+
+    // action: "https://jitsi.api.pip-idea.tk/admin/upload/compress_image/profile",
+    customRequest: (options) => {
+      const data = new FormData();
+      data.append("image", options.file);
+
+      let headers = {
+        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
+      };
+      axios
+        .post(
+          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/video",
+          data,
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          console.log("res image", res);
+          setDocument(res?.data?.data?.image);
+          options.onSuccess(res.data, options.file);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    headers: {
+      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
+    },
+
+    onChange: (info) => {
+      console.log(info.fileList);
+    },
+  };
 
   console.log("updateData", updateData);
   const props1 = {
+    name: "file",
+    maxCount: 1,
+    accept: "image/*",
+    // accept: "image/*",
+
+    listType: "picture",
+    defaultFileList: [
+      {
+        uid: "1",
+        name: "audio file",
+        status: "done",
+        url: updateData?.audio,
+        // url:
+        //   "https://meditation-abhi.s3.us-west-1.amazonaws.com/6238af81504e4d302cf97444/category/1648052228552.png",
+      },
+    ],
+    customRequest: (options) => {
+      const data = new FormData();
+      data.append("image", options.file);
+
+      let headers = {
+        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
+      };
+      axios
+        .post(
+          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/audio",
+          data,
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          console.log("res image", res);
+          setimage(res?.data?.data?.image);
+          options.onSuccess(res.data, options.file);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    headers: {
+      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
+    },
+
+    onChange: (info) => {
+      console.log(info.fileList);
+    },
+  };
+  const propsDocs2 = {
     name: "file",
     maxCount: 1,
     accept: ".mp3,.mpeg,audio/*",
@@ -118,9 +210,13 @@ const Episodes = () => {
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post("https://api.meditatewithabhi.com/upload/audio", data, {
-          headers: headers,
-        })
+        .post(
+          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/audio",
+          data,
+          {
+            headers: headers,
+          }
+        )
         .then((res) => {
           console.log("res image", res);
           setimage(res?.data?.data?.image);
@@ -140,11 +236,12 @@ const Episodes = () => {
   };
   const handleEdit = async (v) => {
     setvideoId(v);
-    await ApiGet(`/audio/${v}`)
+    await ApiGet(`/admin/episode/${v}`)
       .then((res) => {
         console.log("res", res);
-        setupdateData(res?.data?.data[0]);
-        setimage(res?.data?.data[0]?.audio);
+        setupdateData(res?.data?.data);
+        setimage(res?.data?.data?.audio);
+        setDocument(res?.data?.data?.audioOrVideo);
       })
       .catch((e) => {
         console.log("e", e);
@@ -153,7 +250,7 @@ const Episodes = () => {
   };
 
   const handleDelete = async (v) => {
-    await ApiDelete(`/audio/${v}`)
+    await ApiDelete(`/admin/episode/${v}`)
       .then((res) => {
         getData();
         console.log("res", res);
@@ -169,12 +266,13 @@ const Episodes = () => {
 
     let id = window.location.pathname?.split("/")[2];
     const body = {
-      categoryId: id,
+      courseId: id,
       title: values?.title,
-      audio: image,
+      image: image,
+      audioOrVideo: document,
       description: values?.description,
     };
-    ApiPost("/audio/add", body).then(async (res) => {
+    ApiPost("/admin/episode/add", body).then(async (res) => {
       console.log("res add", res);
       await getData();
       // setaddData(values);
@@ -208,6 +306,20 @@ const Episodes = () => {
   };
 
   const normFile = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+  const normFileDoc = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+  const normFileDoc2 = (e) => {
     console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
@@ -252,7 +364,7 @@ const Episodes = () => {
               <th>Title</th>
               <th>Description</th>
               {/* <th>No. of songs</th> */}
-              <th>Category</th>
+              <th>Image</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -263,7 +375,9 @@ const Episodes = () => {
                   <td>{v?.title}</td>
                   <td>{v?.description}</td>
                   {/* <td >{v.number}</td> */}
-                  <td>{v?.categoryName?.name}</td>
+                  <td>
+                    <img src={v?.image} height={50} width={50} />
+                  </td>
 
                   <td className="d-flex">
                     <a
@@ -309,7 +423,9 @@ const Episodes = () => {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">Add Song</Modal.Title>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Add Episode
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="pb-0">
           <Form
@@ -337,7 +453,7 @@ const Episodes = () => {
               <Input.TextArea />
             </Form.Item>
 
-            <Form.Item label="Document">
+            <Form.Item label="Image">
               <Form.Item
                 name="dragger"
                 valuePropName="fileList"
@@ -346,6 +462,24 @@ const Episodes = () => {
                 rules={[{ required: true, message: "file upload is requried" }]}
               >
                 <Upload.Dragger {...props}>
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-hint">
+                    Click or drag audio file to this area to upload
+                  </p>
+                </Upload.Dragger>
+              </Form.Item>
+            </Form.Item>
+            <Form.Item label="Audio Or Video">
+              <Form.Item
+                name="dragger1"
+                valuePropName="fileList1"
+                getValueFromEvent={normFileDoc}
+                //   noStyle
+                rules={[{ required: true, message: "file upload is requried" }]}
+              >
+                <Upload.Dragger {...propsDocs}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
@@ -411,7 +545,7 @@ const Episodes = () => {
               <Input.TextArea />
             </Form.Item>
 
-            <Form.Item label="Document">
+            <Form.Item label="Image">
               <Form.Item
                 name="dragger"
                 valuePropName="fileList"
@@ -420,6 +554,24 @@ const Episodes = () => {
                 // rules={[{ required: true, message: "file upload is requried" }]}
               >
                 <Upload.Dragger {...props1}>
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-hint">
+                    Click or drag audio file to this area to upload
+                  </p>
+                </Upload.Dragger>
+              </Form.Item>
+            </Form.Item>
+            <Form.Item label="Audio Or Video">
+              <Form.Item
+                name="dragger"
+                valuePropName="fileList"
+                getValueFromEvent={normFileDoc2}
+                //   noStyle
+                // rules={[{ required: true, message: "file upload is requried" }]}
+              >
+                <Upload.Dragger {...propsDocs2}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>

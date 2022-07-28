@@ -129,7 +129,7 @@ const Course = () => {
       };
       axios
         .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/profile",
+          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/course",
           data,
           {
             headers: headers,
@@ -186,7 +186,7 @@ const Course = () => {
       };
       axios
         .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/profile",
+          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/course",
           data,
           {
             headers: headers,
