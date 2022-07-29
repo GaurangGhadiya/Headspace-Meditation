@@ -1,8 +1,7 @@
 import { API } from "../../config/API/api.config";
 import Auth from "../Auth";
 import * as authUtil from "../../utils/auth.util";
-export const BaseURL =
-         "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com";
+export const BaseURL = "https://api.sinnesmeditation.com";
 export const Bucket =
   "https://grubgrams.s3.amazonaws.com/";
 const axios = require("axios").default;

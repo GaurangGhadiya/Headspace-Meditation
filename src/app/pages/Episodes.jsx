@@ -71,13 +71,9 @@ const [document, setDocument] = useState("")
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/episode",
-          data,
-          {
-            headers: headers,
-          }
-        )
+        .post("https://api.sinnesmeditation.com/upload/episode", data, {
+          headers: headers,
+        })
         .then((res) => {
           console.log("res image", res);
           setimage(res?.data?.data?.image);
@@ -110,13 +106,9 @@ const [document, setDocument] = useState("")
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/video",
-          data,
-          {
-            headers: headers,
-          }
-        )
+        .post("https://api.sinnesmeditation.com/upload/video", data, {
+          headers: headers,
+        })
         .then((res) => {
           console.log("res image", res);
           setDocument(res?.data?.data?.image);
@@ -161,13 +153,9 @@ const [document, setDocument] = useState("")
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/episode",
-          data,
-          {
-            headers: headers,
-          }
-        )
+        .post("https://api.sinnesmeditation.com/upload/episode", data, {
+          headers: headers,
+        })
         .then((res) => {
           console.log("res image", res);
           setimage(res?.data?.data?.image);
@@ -210,13 +198,9 @@ const [document, setDocument] = useState("")
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/audio",
-          data,
-          {
-            headers: headers,
-          }
-        )
+        .post("https://api.sinnesmeditation.com/upload/audio", data, {
+          headers: headers,
+        })
         .then((res) => {
           console.log("res image", res);
           setimage(res?.data?.data?.image);

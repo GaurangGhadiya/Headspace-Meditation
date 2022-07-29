@@ -128,13 +128,9 @@ const Course = () => {
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/course",
-          data,
-          {
-            headers: headers,
-          }
-        )
+        .post("https://api.sinnesmeditation.com/upload/course", data, {
+          headers: headers,
+        })
         .then((res) => {
           console.log("res image", res);
           setimage(res?.data?.data?.image);
@@ -185,13 +181,9 @@ const Course = () => {
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
       };
       axios
-        .post(
-          "http://meditationbackend-env.eba-anrv7ziq.eu-west-2.elasticbeanstalk.com/upload/course",
-          data,
-          {
-            headers: headers,
-          }
-        )
+        .post("https://api.sinnesmeditation.com/upload/course", data, {
+          headers: headers,
+        })
         .then((res) => {
           console.log("res image", res);
           setimage(res?.data?.data?.image);
