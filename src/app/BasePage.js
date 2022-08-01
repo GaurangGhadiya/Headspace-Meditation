@@ -4,6 +4,10 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 import Course from "./pages/Course";
 import { DashboardPage } from "./pages/DashboardPage";
 import Episodes from "./pages/Episodes";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Support from "./pages/Support";
+import TermsCondition from "./pages/TermsCondition";
+import Usera from "./pages/Usera";
 
 export default function BasePage() {
   // useEffect(() => {
@@ -20,7 +24,14 @@ export default function BasePage() {
         }
         <ContentRoute path="/dashboard" component={DashboardPage} />
         <ContentRoute path="/course" component={Course} />
+        <ContentRoute path="/users" component={Usera} />
         <ContentRoute path="/episodes" component={Episodes} />
+        <ContentRoute path="/privacy-policy" component={PrivacyPolicy} />
+        <ContentRoute path="/support" component={Support} />
+        <ContentRoute
+          path="/terms-condition"
+          component={TermsCondition}
+        />
 
         <Redirect to="error/error-v1" />
       </Switch>

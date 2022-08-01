@@ -289,6 +289,7 @@ const Course = () => {
               <th>Title</th>
               <th>Description</th>
               <th>Image</th>
+              <th>Episode Count </th>
               {/* <th>Created Date</th> */}
               <th>Action</th>
             </tr>
@@ -302,7 +303,8 @@ const Course = () => {
                   <td>
                     <img src={v?.image} height={50} width={50} />
                   </td>
-                  {/* <td>{v.date}</td> */}
+
+                  <td>{v?.episodeCount}</td>
 
                   <td className="d-flex">
                     <a
