@@ -10,7 +10,7 @@ import SVG from "react-inlinesvg";
 const Usera = () => {
      const [data, setdata] = useState([]);
      const [modalShow, setmodalShow] = useState(false);
-     const [status, setstatus] = useState("");
+     const [status, setstatus] = useState("block");
      const [rowId, setrowId] = useState("");
 
       const modalClose = () => {
@@ -22,7 +22,7 @@ const Usera = () => {
           page: 1,
           limit: 999999,
         };
-        await ApiPost("/user", body).then((res) => {
+        await ApiPost("/admin/user", body).then((res) => {
           console.log("res", res);
           setdata(res?.data?.data?.user_data);
         });
@@ -37,12 +37,13 @@ const Usera = () => {
         setmodalShow(true);
       };
 
+      console.log("status", status);
       const submit = async () => {
         const body = {
           userId: rowId,
           isBlock: status === "block" ? true : false,
         };
-        await ApiPut("/user/block", body).then((res) => {
+        await ApiPut("/admin/user/block", body).then((res) => {
           getData();
           console.log(res);
         });
@@ -73,7 +74,7 @@ const Usera = () => {
                 <th>Profile</th>
                 <th>Email</th>
                 <th>Status</th>
-                <th>Premium</th>
+                {/* <th>Premium</th> */}
                 <th>Action</th>
               </tr>
             </thead>
@@ -81,7 +82,7 @@ const Usera = () => {
               {data?.map((v) => {
                 return (
                   <tr>
-                    <td>{v.name}</td>
+                    <td>{v.firstName}</td>
                     <td>
                       {v?.image ? (
                         <img
@@ -121,7 +122,7 @@ const Usera = () => {
                         </div>
                       )}
                     </td>
-                    <td>
+                    {/* <td>
                       {v?.isUserPremium ? (
                         <div class="d-flex align-items-center ddd">
                           <span class="label label-lg label-light-success label-inline">
@@ -135,7 +136,7 @@ const Usera = () => {
                           </span>
                         </div>
                       )}
-                    </td>
+                    </td> */}
                     <td>
                       <a
                         title="Change status"
