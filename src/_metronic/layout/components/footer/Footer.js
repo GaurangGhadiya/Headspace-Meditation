@@ -34,32 +34,32 @@ export function Footer() {
             Headspace
           </a>
         </div>
-        {/* <div className="nav nav-dark order-1 order-md-2">
+        <div className="nav nav-dark order-1 order-md-2">
           <a
-            href=""
+            href="/privacy-policy"
             target="_blank"
             rel="noopener noreferrer"
             className="nav-link pr-3 pl-0"
           >
-            About
+            Privacy Policy
           </a>
           <a
-            href=""
+            href="terms-condition"
             target="_blank"
             rel="noopener noreferrer"
             className="nav-link px-3"
           >
-            Team
+            Terms and Condition
           </a>
           <a
-            href=""
+            href="/support"
             target="_blank"
             rel="noopener noreferrer"
             className="nav-link pl-3 pr-0"
           >
-            Contact
+            Support
           </a>
-        </div> */}
+        </div>
       </div>
     </div>
   );
