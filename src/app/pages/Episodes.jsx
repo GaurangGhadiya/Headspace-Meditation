@@ -5,7 +5,7 @@ import { Button, Modal, Table } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../_metronic/_helpers";
 import { ApiDelete, ApiGet, ApiPost, ApiPut } from "../../helpers/API/ApiData";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import axios from "axios";
 
 import {
@@ -36,6 +36,8 @@ const Episodes = () => {
   const [image, setimage] = useState("");
 const [document, setDocument] = useState("")
   const history = useHistory();
+  const location = useLocation();
+  console.log("location", location);
 
   const getData = async () => {
     const body = {
@@ -330,7 +332,7 @@ const [document, setDocument] = useState("")
     <div className="card card-custom gutter-b">
       <div className="card-header">
         <div className="card-title">
-          <h3 className="card-label">Episodes list</h3>
+          <h3 className="card-label"> {location.search?.split("=")[1]} Episodes list</h3>
         </div>
         <div className="card-toolbar">
           <button

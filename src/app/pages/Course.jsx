@@ -339,7 +339,9 @@ const Course = () => {
                     <a
                       title="Add customer"
                       className="btn btn-icon btn-light btn-hover-primary btn-sm"
-                      onClick={() => history.push(`/episodes/${v._id}`)}
+                      onClick={() =>
+                        history.push( `/episodes/${v._id}?name=${v?.title}` )
+                      }
                     >
                       <span className="svg-icon svg-icon-md svg-icon-primary">
                         <SVG
