@@ -61,9 +61,9 @@ const Feature = () => {
   }, []);
 console.log("apiFlag", apiFlag);
   const handleChecked = async(e,v) =>{
-    if(apiFlag?.length > 3 ){
-        ErrorToast("You have only 4 course limit!")
-    }else{
+    // if(apiFlag?.length > 3 ){
+    //     ErrorToast("You have only 4 course limit!")
+    // }else{
         const body = {
           courseId: v?._id,
           isFeatured: e.target.checked,
@@ -77,7 +77,7 @@ console.log("apiFlag", apiFlag);
           .catch((e) => {
             console.log("e", e);
           });
-    }
+    // }
   }
 
  
