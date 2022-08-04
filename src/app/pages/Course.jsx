@@ -54,6 +54,7 @@ const data1 = [
 ];
 
 const Course = () => {
+  const [category, setCategory] = useState([])
   const [add, setadd] = useState(false);
   const [addData, setaddData] = useState({ isPremium: false });
   const [update, setupdate] = useState(false);
@@ -73,6 +74,14 @@ const Course = () => {
       .then((res) => {
         console.log("res", res);
         setdata(res?.data?.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
+    await ApiGet("/admin/category")
+      .then((res) => {
+        console.log("res", res);
+        setCategory(res?.data?.data);
       })
       .catch((e) => {
         console.log("e", e);
@@ -223,8 +232,9 @@ const Course = () => {
     const body = {
       title: values?.title,
       image: image,
-    //   image: "1213",
+      //   image: "1213",
       description: values?.description,
+      categoryId :values?.category
     };
     ApiPost("/admin/course/add", body).then(async (res) => {
       console.log("res add", res);
@@ -243,6 +253,7 @@ const Course = () => {
       image: image,
       description: values?.description,
       courseId: updateData?._id,
+      categoryId: values?.category,
     };
     ApiPut("/admin/course/update", body).then(async (res) => {
       console.log("res add", res);
@@ -340,7 +351,7 @@ const Course = () => {
                       title="Add customer"
                       className="btn btn-icon btn-light btn-hover-primary btn-sm"
                       onClick={() =>
-                        history.push( `/episodes/${v._id}?name=${v?.title}` )
+                        history.push(`/episodes/${v._id}?name=${v?.title}`)
                       }
                     >
                       <span className="svg-icon svg-icon-md svg-icon-primary">
@@ -387,6 +398,17 @@ const Course = () => {
               rules={[{ required: true, message: "title is requried" }]}
             >
               <Input />
+            </Form.Item>
+            <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true, message: "category is requried" }]}
+            >
+              <Select>
+                {category?.map((v) => (
+                  <Select.Option value={v?._id}>{v?.name}</Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               name="description"
@@ -453,6 +475,9 @@ const Course = () => {
               title: updateData?.title,
               // dragger: updateData?.image,
               description: updateData?.description,
+              category: category?.find(
+                (v) => v?._id == updateData?.categoryId
+              )?.name,
             }}
             onFinish={onFinish2}
             onFinishFailed={onFinishFailed2}
@@ -465,6 +490,17 @@ const Course = () => {
               rules={[{ required: true, message: "title is requried" }]}
             >
               <Input />
+            </Form.Item>
+            <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true, message: "category is requried" }]}
+            >
+              <Select>
+                {category?.map((v) => (
+                  <Select.Option value={v?._id}>{v?.name}</Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               name="description"

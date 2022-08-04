@@ -1,12 +1,15 @@
 import React, { Suspense, lazy } from "react";
 import { Redirect, Switch, Route } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
+import Categoty from "./pages/Categoty";
 import Course from "./pages/Course";
 import { DashboardPage } from "./pages/DashboardPage";
 import Episodes from "./pages/Episodes";
+import Feature from "./pages/Feature";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Support from "./pages/Support";
 import TermsCondition from "./pages/TermsCondition";
+import Time from "./pages/Time";
 import Usera from "./pages/Usera";
 
 export default function BasePage() {
@@ -26,12 +29,12 @@ export default function BasePage() {
         <ContentRoute path="/course" component={Course} />
         <ContentRoute path="/users" component={Usera} />
         <ContentRoute path="/episodes" component={Episodes} />
+        <ContentRoute path="/category" component={Categoty} />
+        <ContentRoute path="/feature/:id" component={Feature} />
+        <ContentRoute path="/time" component={Time} />
         <ContentRoute path="/privacy-policy" component={PrivacyPolicy} />
         <ContentRoute path="/support" component={Support} />
-        <ContentRoute
-          path="/terms-condition"
-          component={TermsCondition}
-        />
+        <ContentRoute path="/terms-condition" component={TermsCondition} />
 
         <Redirect to="error/error-v1" />
       </Switch>
