@@ -24,10 +24,12 @@ const Categoty = () => {
     <div>
       <h2>Feature</h2>
       <div className="row m-0 mt-3">
-        {category?.map((v) => {
+        {category?.map((v,i) => {
           return (
             <div
-              className="col bg-primary px-6 py-16  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
+              className={`col  px-6 py-16  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center ${
+                i == 0 ? "focus" : i == 1 ? "sleep" : "meditation"
+              }`}
               onClick={() => history.push(`/feature/${v?._id}`)}
             >
               <h2
@@ -44,11 +46,13 @@ const Categoty = () => {
       {/* exploer section */}
       <h2 className='mt-4'>Explore</h2>
       <div className="row m-0 mt-3">
-        {category?.map((v) => {
+        {category?.map((v,i) => {
           return (
             <div
-              className="col bg-primary px-6 py-16  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
-                onClick={() => history.push(`/explore/${v?._id}`)}
+              className={`col  px-6 py-16  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center ${
+                i == 0 ? "focus" : i == 1 ? "sleep" : "meditation"
+              }`}
+              onClick={() => history.push(`/explore/${v?._id}`)}
             >
               <h2
                 href="#"

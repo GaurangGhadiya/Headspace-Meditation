@@ -285,13 +285,13 @@ const Expplore = () => {
           <h3 className="card-label">Explore Category list</h3>
         </div>
         <div className="card-toolbar">
-          <button
+         {data?.length <= 7 && <button
             type="button"
             className="btn btn-primary"
             onClick={() => setadd(true)}
           >
             Add Items
-          </button>
+          </button>}
         </div>
       </div>
       <div className="card-body">

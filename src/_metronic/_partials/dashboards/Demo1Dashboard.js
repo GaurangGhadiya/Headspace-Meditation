@@ -17,7 +17,7 @@ export function Demo1Dashboard() {
               <div className="">
                 <div className="row m-0">
                   <div
-                    className="col bg-primary px-6 py-8  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
+                    className="col focus px-6 py-20  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
                     onClick={() => history.push("/time?slug=morning")}
                   >
                     <p
@@ -28,7 +28,7 @@ export function Demo1Dashboard() {
                     </p>
                   </div>
                   <div
-                    className="col bg-primary px-6 py-8  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
+                    className="col sleep px-6 py-20  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
                     onClick={() => history.push("/time?slug=afternoon")}
                   >
                     <p
@@ -39,7 +39,7 @@ export function Demo1Dashboard() {
                     </p>
                   </div>
                   <div
-                    className="col bg-primary px-6 py-8  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
+                    className="col meditation px-6 py-20  mb-7  cursor-pointer d-flex justify-content-center align-items-center"
                     onClick={() => history.push("/time?slug=night")}
                   >
                     <p
