@@ -44,7 +44,7 @@ const [document, setDocument] = useState("")
       page: 1,
       limit: 10,
     };
-    await ApiGet(`/admin/episode`)
+    await ApiGet(`/admin/episode/course/${window.location.pathname?.split("/")[2]}`)
       .then((res) => {
         console.log("res", res);
         setdata(res?.data?.data);

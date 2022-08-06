@@ -30,7 +30,7 @@ const Categoty = () => {
               className={`col  px-6 py-16  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center ${
                 i == 0 ? "focus" : i == 1 ? "sleep" : "meditation"
               }`}
-              onClick={() => history.push(`/feature/${v?._id}`)}
+              onClick={() => history.push(`/feature/${v?._id}?name=${v?.name}`)}
             >
               <h2
                 href="#"
@@ -52,7 +52,7 @@ const Categoty = () => {
               className={`col  px-6 py-16  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center ${
                 i == 0 ? "focus" : i == 1 ? "sleep" : "meditation"
               }`}
-              onClick={() => history.push(`/explore/${v?._id}`)}
+              onClick={() => history.push(`/explore/${v?._id}?name=${v?.name}`)}
             >
               <h2
                 href="#"

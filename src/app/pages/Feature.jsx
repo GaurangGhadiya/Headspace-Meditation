@@ -14,7 +14,7 @@ import {
   ApiPut,
   Bucket,
 } from "../../helpers/API/ApiData";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import {
   Form,
@@ -31,6 +31,7 @@ import {
   TimePicker,
 } from "antd";
 import { ErrorToast, SuccessToast } from "../../helpers/Toast";
+import Search from "antd/lib/transfer/search";
 
 
 
@@ -38,15 +39,20 @@ const Feature = () => {
   const [courseList, setCourseList] = useState([])
   const [apiFlag, setApiFlag] = useState([])
     const [checkedList, setCheckedList] = useState([]);
+    const [search, setSearch] = useState("")
 
 
 
   const history = useHistory();
+  const location = useLocation()
 
-  const getData = async () => {
+  const getData = async (s) => {
  
-
-    await ApiGet(`/admin/course/category/${window.location.pathname?.split("/")[2]}`)
+const body = {
+  id: window.location.pathname?.split("/")[2],
+  search :s
+};
+    await ApiPost(`/admin/course/category`, body)
       .then((res) => {
         console.log("res", res);
         setCourseList(res?.data?.data);
@@ -59,8 +65,12 @@ const Feature = () => {
 
   useEffect(() => {
 
-    getData();
+    getData(search);
   }, []);
+   const onSearch = (e) => {
+     setSearch(e);
+     getData(e.target.value);
+   };
 console.log("apiFlag", apiFlag);
   const handleChecked = async(e,v) =>{
     // if(apiFlag?.length > 3 ){
@@ -88,7 +98,7 @@ console.log("apiFlag", apiFlag);
        await ApiPut(`/admin/feature/course`, body)
          .then((res) => {
            console.log("res", res);
-           getData();
+           getData(search);
            // setCourseList(res?.data?.data);
            if (v == checkedList?.length - 1) {
              SuccessToast(`Feature list update sucessfully!`);
@@ -105,7 +115,9 @@ console.log("apiFlag", apiFlag);
     <div className="card card-custom gutter-b">
       <div className="card-header">
         <div className="card-title">
-          <h3 className="card-label">Course list</h3>
+          <h3 className="card-label text-capitalize">
+            {location.search?.split("=")[1]} Featured Course list
+          </h3>
         </div>
         <div className="card-toolbar">
           <button
@@ -118,7 +130,12 @@ console.log("apiFlag", apiFlag);
         </div>
       </div>
       <div className="card-body">
-        <Table responsive>
+        <Search
+          placeholder=" Search..."
+          onChange={(e) => onSearch(e)}
+          enterButton
+        />
+        <Table responsive className="mt-3">
           <thead>
             <tr>
               <th>Feature </th>

@@ -54,7 +54,7 @@ const ExploreCourse = () => {
       .catch((e) => {
         console.log("e", e);
       });
-       await ApiGet(`/admin/course/category/${location.search?.split("=")[2]}`)
+       await ApiGet(`/admin/course/category_wise/${location.search?.split("=")[2]}`)
          .then((res) => {
            console.log("res", res);
            setCourse(res?.data?.data);

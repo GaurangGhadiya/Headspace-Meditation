@@ -31,6 +31,7 @@ import {
   TimePicker,
 } from "antd";
 import { SuccessToast } from "../../helpers/Toast";
+import Search from "antd/lib/transfer/search";
 
 const data1 = [
   {
@@ -62,15 +63,14 @@ const Course = () => {
   const [videoId, setvideoId] = useState("");
   const [data, setdata] = useState([]);
   const [image, setimage] = useState("");
-
+const [search, setSearch] = useState("")
   const history = useHistory();
 
-  const getData = async () => {
+  const getData = async (s) => {
     const body = {
-      page: 1,
-      limit: 1000,
+      search:s
     };
-    await ApiGet("/admin/course")
+    await ApiPost("/admin/course/search", body)
       .then((res) => {
         console.log("res", res);
         setdata(res?.data?.data);
@@ -89,9 +89,13 @@ const Course = () => {
   };
 
   useEffect(() => {
-    getData();
+    getData(search);
   }, []);
 
+  const onSearch = (e) => {
+    setSearch(e)
+getData(e.target.value);
+  }
   const handleEdit = async (v) => {
     setvideoId(v);
     await ApiGet(`/admin/course/${v}`)
@@ -114,7 +118,7 @@ const Course = () => {
       .then((res) => {
       SuccessToast(res?.data?.message);
 
-        getData();
+        getData(search);
         console.log("res", res);
         // setupdateData(res?.data?.data);
       })
@@ -239,7 +243,7 @@ const Course = () => {
     ApiPost("/admin/course/add", body).then(async (res) => {
       console.log("res add", res);
       SuccessToast(res?.data?.message);
-      await getData();
+      await getData(search);
       setaddData(values);
       modalClose();
     });
@@ -259,7 +263,7 @@ const Course = () => {
       console.log("res add", res);
       SuccessToast(res?.data?.message);
 
-      await getData();
+      await getData(search);
       //  setupdateData(values);
       modalClose2();
     });
@@ -294,12 +298,14 @@ const Course = () => {
         </div>
       </div>
       <div className="card-body">
-        <Table responsive>
+        <Search placeholder=" Search..." onChange={(e) => onSearch(e)} enterButton />
+        <Table responsive className="mt-3">
           <thead>
             <tr>
               <th>Title</th>
               <th>Description</th>
               <th>Image</th>
+              <th>Category</th>
               <th>Episode Count </th>
               {/* <th>Created Date</th> */}
               <th>Action</th>
@@ -309,13 +315,14 @@ const Course = () => {
             {data?.map((v) => {
               return (
                 <tr>
-                  <td>{v.title}</td>
+                  <td className="text-capitalize"> {v.title}</td>
                   <td>{v.description}</td>
                   <td>
                     <img src={v?.image} height={50} width={50} />
                   </td>
+                  <td className="text-capitalize">{v.category}</td>
 
-                  <td>{v?.episodeCount}</td>
+                  <td>{v?.episodeCount ?? 0}</td>
 
                   <td className="d-flex">
                     <a
@@ -475,9 +482,8 @@ const Course = () => {
               title: updateData?.title,
               // dragger: updateData?.image,
               description: updateData?.description,
-              category: category?.find(
-                (v) => v?._id == updateData?.categoryId
-              )?.name,
+              category: category?.find((v) => v?._id == updateData?.categoryId)
+                ?.name,
             }}
             onFinish={onFinish2}
             onFinishFailed={onFinishFailed2}
