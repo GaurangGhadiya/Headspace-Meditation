@@ -24,7 +24,7 @@ export function Demo1Dashboard() {
                       href="#"
                       className="text-white font-weight-bold font-size-h2"
                     >
-                      Good Morning
+                      Start Your Day
                     </p>
                   </div>
                   <div
@@ -35,7 +35,7 @@ export function Demo1Dashboard() {
                       href="#"
                       className="text-white font-weight-bold font-size-h2"
                     >
-                      Good Afternoon
+                      Afternoon Lift
                     </p>
                   </div>
                   <div
@@ -46,7 +46,7 @@ export function Demo1Dashboard() {
                       href="#"
                       className="text-white font-weight-bold font-size-h2"
                     >
-                      Good Night
+                      At Night
                     </p>
                   </div>
                 </div>

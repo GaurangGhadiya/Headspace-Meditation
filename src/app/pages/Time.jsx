@@ -36,9 +36,11 @@ const Time = () => {
     const location = useLocation()
     console.log("location", location);
   const [episodeList, setepisodeList] = useState([]);
+  const [checkedList, setCheckedList] = useState([])
   const [apiFlag, setApiFlag] = useState([]);
 
   const history = useHistory();
+  console.log("checkedList", checkedList);
 
   const getData = async () => {
     await ApiGet(`/admin/episode/get`)
@@ -60,24 +62,32 @@ const Time = () => {
     // if (apiFlag?.length > 3) {
     //   ErrorToast("You have only 4 course limit!");
     // } else {
-      const body = {
-        episodeId: v?._id,
-        
-      };
-      await ApiPut(`/admin/episode/${location?.search?.split("=")[1]}/add`, body)
-        .then((res) => {
-          console.log("res", res);
-          getData();
-          // setepisodeList(res?.data?.data);
-          SuccessToast(
-            `Meditation added in ${location?.search?.split("=")[1]}`
-          );
-        })
-        .catch((e) => {
-          console.log("e", e);
-        });
+
+    setCheckedList([...checkedList, v?._id])
+      
     // }
   };
+
+  const save = async() => {
+   for(let v=0; v<checkedList?.length; v++){
+    const body = {
+      episodeId: checkedList[v],
+    };
+    ApiPut(`/admin/episode/${location?.search?.split("=")[1]}/add`, body)
+      .then((res) => {
+        console.log("res", res);
+        getData();
+        // setepisodeList(res?.data?.data);
+        if (v == checkedList?.length-1){
+            SuccessToast(`Meditation added in ${location?.search?.split("=")[1]}`);
+        }
+          
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
+   }
+  }
 
   return (
     <div className="card card-custom gutter-b">
@@ -85,21 +95,21 @@ const Time = () => {
         <div className="card-title">
           <h3 className="card-label">Episode list</h3>
         </div>
-        {/* <div className="card-toolbar">
+        <div className="card-toolbar">
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => setadd(true)}
+            onClick={() => save()}
           >
-            Add Course
+            Save
           </button>
-        </div> */}
+        </div>
       </div>
       <div className="card-body">
         <Table responsive>
           <thead>
             <tr>
-              <th>Feature </th>
+              <th>Episode </th>
               <th>Title</th>
              
             </tr>

@@ -44,7 +44,7 @@ const [document, setDocument] = useState("")
       page: 1,
       limit: 10,
     };
-    await ApiGet("/admin/episode")
+    await ApiGet(`/admin/episode`)
       .then((res) => {
         console.log("res", res);
         setdata(res?.data?.data);

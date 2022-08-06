@@ -37,6 +37,8 @@ import { ErrorToast, SuccessToast } from "../../helpers/Toast";
 const Feature = () => {
   const [courseList, setCourseList] = useState([])
   const [apiFlag, setApiFlag] = useState([])
+    const [checkedList, setCheckedList] = useState([]);
+
 
 
   const history = useHistory();
@@ -64,21 +66,39 @@ console.log("apiFlag", apiFlag);
     // if(apiFlag?.length > 3 ){
     //     ErrorToast("You have only 4 course limit!")
     // }else{
-        const body = {
-          courseId: v?._id,
-          isFeatured: e.target.checked,
-        };
-        await ApiPut(`/admin/feature/course`, body)
-          .then((res) => {
-            console.log("res", res);
-            getData();
-            // setCourseList(res?.data?.data);
-          })
-          .catch((e) => {
-            console.log("e", e);
-          });
+      setCourseList(
+        courseList?.map((u) =>
+          u?._id == v?._id ? { ...u, isFeatured: e.target.checked } : u
+        )
+      );
+      setCheckedList([
+        ...checkedList,
+        { courseId: v?._id, isFeatured: e.target.checked },
+      ]);
+       
     // }
   }
+
+  const save = async () => {
+    for (let v = 0; v < checkedList?.length; v++) {
+       const body = {
+         courseId: checkedList[v]?.courseId,
+         isFeatured: checkedList[v]?.isFeatured,
+       };
+       await ApiPut(`/admin/feature/course`, body)
+         .then((res) => {
+           console.log("res", res);
+           getData();
+           // setCourseList(res?.data?.data);
+           if (v == checkedList?.length - 1) {
+             SuccessToast(`Feature list update sucessfully!`);
+           }
+         })
+         .catch((e) => {
+           console.log("e", e);
+         });
+    }
+  };
 
  
   return (
@@ -87,15 +107,15 @@ console.log("apiFlag", apiFlag);
         <div className="card-title">
           <h3 className="card-label">Course list</h3>
         </div>
-        {/* <div className="card-toolbar">
+        <div className="card-toolbar">
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => setadd(true)}
+            onClick={() => save()}
           >
-            Add Course
+            Save
           </button>
-        </div> */}
+        </div>
       </div>
       <div className="card-body">
         <Table responsive>
