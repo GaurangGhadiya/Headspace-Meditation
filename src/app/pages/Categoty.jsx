@@ -48,7 +48,7 @@ const Categoty = () => {
           return (
             <div
               className="col bg-primary px-6 py-16  mr-7 mb-7  cursor-pointer d-flex justify-content-center align-items-center"
-              //   onClick={() => history.push("/users")}
+                onClick={() => history.push(`/explore/${v?._id}`)}
             >
               <h2
                 href="#"

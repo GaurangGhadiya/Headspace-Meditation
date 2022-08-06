@@ -3,10 +3,18 @@ import { Button, Modal, Table } from "react-bootstrap";
 // import AddVideo from "./AddVideo";
 // import UpdateVideo from "./UpdateVideo";
 import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../_metronic/_helpers";
-import { ApiDelete, ApiGet, ApiPost, ApiPut } from "../../helpers/API/ApiData";
-import { useHistory, useLocation } from "react-router-dom";
 import axios from "axios";
+import { toAbsoluteUrl } from "../../_metronic/_helpers";
+import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+
+import {
+  ApiDelete,
+  ApiGet,
+  ApiPost,
+  ApiPut,
+  Bucket,
+} from "../../helpers/API/ApiData";
+import { useHistory } from "react-router-dom";
 
 import {
   Form,
@@ -22,11 +30,31 @@ import {
   DatePicker,
   TimePicker,
 } from "antd";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { SuccessToast } from "../../helpers/Toast";
 
+const data1 = [
+  {
+    title: "Love Song",
+    description: "This is love songs",
+    number: "5",
+    date: "11/01/2022",
+  },
+  {
+    title: "Sad Song",
+    description: "This is Sad songs",
+    number: "2",
+    date: "15/01/2022",
+  },
+  {
+    title: "Happy Song",
+    description: "This is Happy songs",
+    number: "45",
+    date: "14/02/2022",
+  },
+];
 
-
-const Episodes = () => {
+const Expplore = () => {
+  const [category, setCategory] = useState([]);
   const [add, setadd] = useState(false);
   const [addData, setaddData] = useState({ isPremium: false });
   const [update, setupdate] = useState(false);
@@ -34,20 +62,26 @@ const Episodes = () => {
   const [videoId, setvideoId] = useState("");
   const [data, setdata] = useState([]);
   const [image, setimage] = useState("");
-const [document, setDocument] = useState("")
+
   const history = useHistory();
-  const location = useLocation();
-  console.log("location", location);
 
   const getData = async () => {
     const body = {
       page: 1,
-      limit: 10,
+      limit: 1000,
     };
-    await ApiGet(`/admin/episode`)
+    await ApiGet(`/admin/explore/category/${window.location.pathname?.split("/")[2]}`)
       .then((res) => {
         console.log("res", res);
         setdata(res?.data?.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
+    await ApiGet("/admin/category")
+      .then((res) => {
+        console.log("res", res);
+        setCategory(res?.data?.data);
       })
       .catch((e) => {
         console.log("e", e);
@@ -58,186 +92,28 @@ const [document, setDocument] = useState("")
     getData();
   }, []);
 
-  const props = {
-    name: "file",
-    maxCount: 1,
-    accept: "image/*",
-    listType: "picture",
-
-    // action: "https://jitsi.api.pip-idea.tk/admin/upload/compress_image/profile",
-    customRequest: (options) => {
-      const data = new FormData();
-      data.append("image", options.file);
-
-      let headers = {
-        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
-      };
-      axios
-        .post("https://api.sinnesmeditation.com/upload/episode", data, {
-          headers: headers,
-        })
-        .then((res) => {
-          console.log("res image", res);
-          setimage(res?.data?.data?.image);
-          options.onSuccess(res.data, options.file);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    headers: {
-      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
-    },
-
-    onChange: (info) => {
-      console.log(info.fileList);
-    },
-  };
-  const propsDocs = {
-    name: "file",
-    maxCount: 1,
-    accept: ".mp3,.mpeg,audio/*",
-    listType: "picture",
-
-    // action: "https://jitsi.api.pip-idea.tk/admin/upload/compress_image/profile",
-    customRequest: (options) => {
-      const data = new FormData();
-      data.append("image", options.file);
-
-      let headers = {
-        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
-      };
-      axios
-        .post("https://api.sinnesmeditation.com/upload/video", data, {
-          headers: headers,
-        })
-        .then((res) => {
-          console.log("res image", res);
-          setDocument(res?.data?.data?.image);
-          options.onSuccess(res.data, options.file);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    headers: {
-      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
-    },
-
-    onChange: (info) => {
-      console.log(info.fileList);
-    },
-  };
-
-  console.log("updateData", updateData);
-  const props1 = {
-    name: "file",
-    maxCount: 1,
-    accept: "image/*",
-    // accept: "image/*",
-
-    listType: "picture",
-    defaultFileList: [
-      {
-        uid: "1",
-        name: "image",
-        status: "done",
-        url: updateData?.image,
-        // url:
-        //   "https://meditation-abhi.s3.us-west-1.amazonaws.com/6238af81504e4d302cf97444/category/1648052228552.png",
-      },
-    ],
-    customRequest: (options) => {
-      const data = new FormData();
-      data.append("image", options.file);
-
-      let headers = {
-        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
-      };
-      axios
-        .post("https://api.sinnesmeditation.com/upload/episode", data, {
-          headers: headers,
-        })
-        .then((res) => {
-          console.log("res image", res);
-          setimage(res?.data?.data?.image);
-          options.onSuccess(res.data, options.file);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    headers: {
-      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
-    },
-
-    onChange: (info) => {
-      console.log(info.fileList);
-    },
-  };
-  const propsDocs1 = {
-    name: "file",
-    maxCount: 1,
-    accept: ".mp3,.mpeg,audio/*",
-    // accept: "image/*",
-
-    listType: "picture",
-    defaultFileList: [
-      {
-        uid: "1",
-        name: "audio file",
-        status: "done",
-        url: updateData?.audioOrVideo,
-        // url:
-        //   "https://meditation-abhi.s3.us-west-1.amazonaws.com/6238af81504e4d302cf97444/category/1648052228552.png",
-      },
-    ],
-    customRequest: (options) => {
-      const data = new FormData();
-      data.append("image", options.file);
-
-      let headers = {
-        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
-      };
-      axios
-        .post("https://api.sinnesmeditation.com/upload/audio", data, {
-          headers: headers,
-        })
-        .then((res) => {
-          console.log("res image", res);
-          setimage(res?.data?.data?.image);
-          options.onSuccess(res.data, options.file);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    headers: {
-      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
-    },
-
-    onChange: (info) => {
-      console.log(info.fileList);
-    },
-  };
   const handleEdit = async (v) => {
     setvideoId(v);
-    await ApiGet(`/admin/episode/${v}`)
+    await ApiGet(`/admin/explore/${v}`)
       .then((res) => {
         console.log("res", res);
         setupdateData(res?.data?.data);
-        setimage(res?.data?.data?.audio);
-        setDocument(res?.data?.data?.audioOrVideo);
+        setimage(res?.data?.data?.image);
+
+        setupdate(true);
       })
       .catch((e) => {
         console.log("e", e);
       });
-    setupdate(true);
   };
 
+  console.log("updateData", updateData);
+
   const handleDelete = async (v) => {
-    await ApiDelete(`/admin/episode/${v}`)
+    await ApiDelete(`/admin/explore/${v}`)
       .then((res) => {
+        SuccessToast(res?.data?.message);
+
         getData();
         console.log("res", res);
         // setupdateData(res?.data?.data);
@@ -247,39 +123,143 @@ const [document, setDocument] = useState("")
       });
   };
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const props = {
+    name: "file",
+    maxCount: 1,
+    accept: "image/*",
+    listType: "picture",
 
-    let id = window.location.pathname?.split("/")[2];
+    customRequest: (options) => {
+      const data = new FormData();
+      data.append("image", options.file);
+
+      let headers = {
+        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
+      };
+      axios
+        .post("https://api.sinnesmeditation.com/upload/explore", data, {
+          headers: headers,
+        })
+        .then((res) => {
+          console.log("res image", res);
+          setimage(res?.data?.data?.image);
+          options.onSuccess(res.data, options.file);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    headers: {
+      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
+    },
+
+    onChange: (info) => {
+      console.log(info.fileList);
+    },
+  };
+  const props1 = {
+    name: "file",
+    maxCount: 1,
+    accept: "image/*",
+    listType: "picture",
+    defaultFileList: [
+      {
+        uid: "1",
+        name: "",
+        status: "done",
+        // response: "Server Error 500", // custom error message to show
+        url: updateData?.image,
+      },
+    ],
+    // action: "https://jitsi.api.pip-idea.tk/admin/upload/compress_image/profile",
+    customRequest: (options) => {
+      const data = new FormData();
+      data.append("image", options.file);
+
+      // ApiPost("/upload/compress_image/profile", data)
+      //   .then((res) => {
+      //     console.log("res", res);
+      //     setimage(res?.data?.data?.image);
+      //     options.onSuccess(res.data, options.file);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+
+      let headers = {
+        Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
+      };
+      axios
+        .post("https://api.sinnesmeditation.com/upload/explore", data, {
+          headers: headers,
+        })
+        .then((res) => {
+          console.log("res image", res);
+          setimage(res?.data?.data?.image);
+          options.onSuccess(res.data, options.file);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    headers: {
+      authorization: JSON.parse(localStorage.getItem("userinfo")).token,
+    },
+
+    onChange: (info) => {
+      console.log(info.fileList);
+    },
+  };
+  const normFile = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  const normFile2 = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  const onFinish = (values) => {
+    console.log("Success1:", values);
+
     const body = {
-      courseId: id,
       title: values?.title,
       image: image,
-      audioOrVideo: document,
+      //   image: "1213",
       description: values?.description,
+      categoryId: window.location.pathname?.split("/")[2]
     };
-    ApiPost("/admin/episode/add", body).then(async (res) => {
+    ApiPost("/admin/explore/add", body).then(async (res) => {
       console.log("res add", res);
+      SuccessToast(res?.data?.message);
       await getData();
-      // setaddData(values);
+      setaddData(values);
       modalClose();
     });
   };
 
-  console.log("image:", image);
   const onFinish2 = (values) => {
     console.log("Success:", values);
 
     const body = {
-      courseId: window.location.pathname?.split("/")[2],
       title: values?.title,
       image: image,
       description: values?.description,
-      episodeId: updateData?._id,
-      audioOrVideo :document
+      //   courseId: ,
+      categoryId: window.location.pathname?.split("/")[2],
+      exploreId: updateData?._id,
     };
-    ApiPut("/admin/episode/update", body).then(async (res) => {
+    ApiPut("/admin/explore/update", body).then(async (res) => {
       console.log("res add", res);
+      SuccessToast(res?.data?.message);
+
       await getData();
       //  setupdateData(values);
       modalClose2();
@@ -292,36 +272,6 @@ const [document, setDocument] = useState("")
     console.log("Failed:", errorInfo);
   };
 
-  const normFile = (e) => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-  const normFileDoc = (e) => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-  const normFileDoc2 = (e) => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-  const normFile2 = (e) => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-  console.log("addDta", addData);
-
   const modalClose = () => {
     setadd(false);
   };
@@ -332,7 +282,7 @@ const [document, setDocument] = useState("")
     <div className="card card-custom gutter-b">
       <div className="card-header">
         <div className="card-title">
-          <h3 className="card-label"> {location.search?.split("=")[1]} Episodes list</h3>
+          <h3 className="card-label">Explore Category list</h3>
         </div>
         <div className="card-toolbar">
           <button
@@ -340,7 +290,7 @@ const [document, setDocument] = useState("")
             className="btn btn-primary"
             onClick={() => setadd(true)}
           >
-            Add Episodes
+            Add Items
           </button>
         </div>
       </div>
@@ -350,8 +300,9 @@ const [document, setDocument] = useState("")
             <tr>
               <th>Title</th>
               <th>Description</th>
-              {/* <th>No. of songs</th> */}
               <th>Image</th>
+              {/* <th>Episode Count </th> */}
+              {/* <th>Created Date</th> */}
               <th>Action</th>
             </tr>
           </thead>
@@ -359,12 +310,13 @@ const [document, setDocument] = useState("")
             {data?.map((v) => {
               return (
                 <tr>
-                  <td>{v?.title}</td>
-                  <td>{v?.description}</td>
-                  {/* <td >{v.number}</td> */}
+                  <td>{v.title}</td>
+                  <td>{v.description}</td>
                   <td>
                     <img src={v?.image} height={50} width={50} />
                   </td>
+
+                  {/* <td>{v?.episodeCount}</td> */}
 
                   <td className="d-flex">
                     <a
@@ -395,6 +347,26 @@ const [document, setDocument] = useState("")
                         />
                       </span>
                     </a>
+
+                    <a
+                      title="Add customer"
+                      className="btn btn-icon btn-light btn-hover-primary btn-sm"
+                      onClick={() =>
+                        history.push(
+                          `/explore-episodes/${v._id}?name=${v?.title}?id=${
+                            window.location.pathname?.split("/")[2]
+                          }`
+                        )
+                      }
+                    >
+                      <span className="svg-icon svg-icon-md svg-icon-primary">
+                        <SVG
+                          src={toAbsoluteUrl(
+                            "/media/svg/icons/Files/File-plus.svg"
+                          )}
+                        />
+                      </span>
+                    </a>
                   </td>
                 </tr>
               );
@@ -411,7 +383,7 @@ const [document, setDocument] = useState("")
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Add Episode
+            Add Course
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="pb-0">
@@ -432,6 +404,17 @@ const [document, setDocument] = useState("")
             >
               <Input />
             </Form.Item>
+            {/* <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true, message: "category is requried" }]}
+            >
+              <Select>
+                {category?.map((v) => (
+                  <Select.Option value={v?._id}>{v?.name}</Select.Option>
+                ))}
+              </Select>
+            </Form.Item> */}
             <Form.Item
               name="description"
               label="Description"
@@ -439,41 +422,27 @@ const [document, setDocument] = useState("")
             >
               <Input.TextArea />
             </Form.Item>
-
-            <Form.Item label="Image">
+            <Form.Item label="Document">
               <Form.Item
                 name="dragger"
                 valuePropName="fileList"
                 getValueFromEvent={normFile}
                 //   noStyle
-                rules={[{ required: true, message: "file upload is requried" }]}
+                rules={[{ required: true, message: "image is requried" }]}
               >
                 <Upload.Dragger {...props}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
                   <p className="ant-upload-hint">
-                    Click or drag audio file to this area to upload
+                    Click or drag file to this area to upload
                   </p>
                 </Upload.Dragger>
-              </Form.Item>
-            </Form.Item>
-            <Form.Item label="Audio Or Video">
-              <Form.Item
-                name="dragger1"
-                valuePropName="fileList1"
-                getValueFromEvent={normFileDoc}
-                //   noStyle
-                rules={[{ required: true, message: "file upload is requried" }]}
-              >
-                <Upload.Dragger {...propsDocs}>
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-hint">
-                    Click or drag audio file to this area to upload
-                  </p>
-                </Upload.Dragger>
+                {/* <Upload {...props}>
+                      <aButton icon={<UploadOutlined />}>
+                        Click to Upload
+                      </aButton>
+                    </Upload> */}
               </Form.Item>
             </Form.Item>
 
@@ -498,7 +467,7 @@ const [document, setDocument] = useState("")
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Update Episode
+            Update Course
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -511,6 +480,8 @@ const [document, setDocument] = useState("")
               title: updateData?.title,
               // dragger: updateData?.image,
               description: updateData?.description,
+              category: category?.find((v) => v?._id == updateData?.categoryId)
+                ?.name,
             }}
             onFinish={onFinish2}
             onFinishFailed={onFinishFailed2}
@@ -524,6 +495,17 @@ const [document, setDocument] = useState("")
             >
               <Input />
             </Form.Item>
+            {/* <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true, message: "category is requried" }]}
+            >
+              <Select>
+                {category?.map((v) => (
+                  <Select.Option value={v?._id}>{v?.name}</Select.Option>
+                ))}
+              </Select>
+            </Form.Item> */}
             <Form.Item
               name="description"
               label="Description"
@@ -532,38 +514,20 @@ const [document, setDocument] = useState("")
               <Input.TextArea />
             </Form.Item>
 
-            <Form.Item label="Image">
+            <Form.Item label="Document">
               <Form.Item
                 name="dragger"
                 valuePropName="fileList"
                 getValueFromEvent={normFile2}
                 //   noStyle
-                // rules={[{ required: true, message: "file upload is requried" }]}
+                // rules={[{ required: true, message: "please upload file" }]}
               >
                 <Upload.Dragger {...props1}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
                   <p className="ant-upload-hint">
-                    Click or drag audio file to this area to upload
-                  </p>
-                </Upload.Dragger>
-              </Form.Item>
-            </Form.Item>
-            <Form.Item label="Audio Or Video">
-              <Form.Item
-                name="dragger1"
-                valuePropName="fileList1"
-                getValueFromEvent={normFileDoc2}
-                //   noStyle
-                // rules={[{ required: true, message: "file upload is requried" }]}
-              >
-                <Upload.Dragger {...propsDocs1}>
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-hint">
-                    Click or drag audio file to this area to upload
+                    Click or drag file to this area to upload
                   </p>
                 </Upload.Dragger>
               </Form.Item>
@@ -584,4 +548,4 @@ const [document, setDocument] = useState("")
   );
 };
 
-export default Episodes;
+export default Expplore;

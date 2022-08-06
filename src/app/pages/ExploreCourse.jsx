@@ -23,10 +23,9 @@ import {
   TimePicker,
 } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { SuccessToast } from "../../helpers/Toast";
 
-
-
-const Episodes = () => {
+const ExploreCourse = () => {
   const [add, setadd] = useState(false);
   const [addData, setaddData] = useState({ isPremium: false });
   const [update, setupdate] = useState(false);
@@ -34,7 +33,8 @@ const Episodes = () => {
   const [videoId, setvideoId] = useState("");
   const [data, setdata] = useState([]);
   const [image, setimage] = useState("");
-const [document, setDocument] = useState("")
+  const [document, setDocument] = useState("");
+  const [course, setCourse] = useState([])
   const history = useHistory();
   const location = useLocation();
   console.log("location", location);
@@ -44,14 +44,24 @@ const [document, setDocument] = useState("")
       page: 1,
       limit: 10,
     };
-    await ApiGet(`/admin/episode`)
+    await ApiGet(
+      `/admin/explore/course/${window.location.pathname?.split("/")[2]}`
+    )
       .then((res) => {
-        console.log("res", res);
-        setdata(res?.data?.data);
+        console.log("res ddd", res);
+        setdata(res?.data?.data?.[0]?.course);
       })
       .catch((e) => {
         console.log("e", e);
       });
+       await ApiGet(`/admin/course/category/${location.search?.split("=")[2]}`)
+         .then((res) => {
+           console.log("res", res);
+           setCourse(res?.data?.data);
+         })
+         .catch((e) => {
+           console.log("e", e);
+         });
   };
 
   useEffect(() => {
@@ -251,17 +261,16 @@ const [document, setDocument] = useState("")
     console.log("Success:", values);
 
     let id = window.location.pathname?.split("/")[2];
+    console.log("values",values);
     const body = {
-      courseId: id,
-      title: values?.title,
-      image: image,
-      audioOrVideo: document,
-      description: values?.description,
+      exploreId: id,
+      courseList: values?.category,
     };
-    ApiPost("/admin/episode/add", body).then(async (res) => {
+    ApiPut("/admin/explore/course/add", body).then(async (res) => {
       console.log("res add", res);
       await getData();
       // setaddData(values);
+      SuccessToast("Course added sucessfully!");
       modalClose();
     });
   };
@@ -276,7 +285,7 @@ const [document, setDocument] = useState("")
       image: image,
       description: values?.description,
       episodeId: updateData?._id,
-      audioOrVideo :document
+      audioOrVideo: document,
     };
     ApiPut("/admin/episode/update", body).then(async (res) => {
       console.log("res add", res);
@@ -332,7 +341,10 @@ const [document, setDocument] = useState("")
     <div className="card card-custom gutter-b">
       <div className="card-header">
         <div className="card-title">
-          <h3 className="card-label"> {location.search?.split("=")[1]} Episodes list</h3>
+          <h3 className="card-label">
+            {" "}
+            {location.search?.split("=")[1]?.slice(0, -3)} Course list
+          </h3>
         </div>
         <div className="card-toolbar">
           <button
@@ -340,7 +352,7 @@ const [document, setDocument] = useState("")
             className="btn btn-primary"
             onClick={() => setadd(true)}
           >
-            Add Episodes
+            Add Course
           </button>
         </div>
       </div>
@@ -352,7 +364,7 @@ const [document, setDocument] = useState("")
               <th>Description</th>
               {/* <th>No. of songs</th> */}
               <th>Image</th>
-              <th>Action</th>
+              {/* <th>Action</th> */}
             </tr>
           </thead>
           <tbody>
@@ -366,7 +378,7 @@ const [document, setDocument] = useState("")
                     <img src={v?.image} height={50} width={50} />
                   </td>
 
-                  <td className="d-flex">
+                  {/* <td className="d-flex">
                     <a
                       title="Edit customer"
                       className="btn btn-icon btn-light btn-hover-primary btn-sm "
@@ -395,7 +407,7 @@ const [document, setDocument] = useState("")
                         />
                       </span>
                     </a>
-                  </td>
+                  </td> */}
                 </tr>
               );
             })}
@@ -411,7 +423,7 @@ const [document, setDocument] = useState("")
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Add Episode
+            Add Course
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="pb-0">
@@ -426,6 +438,17 @@ const [document, setDocument] = useState("")
             autoComplete="off"
           >
             <Form.Item
+              label="Course"
+              name="category"
+              rules={[{ required: true, message: "Course is requried" }]}
+            >
+              <Select mode="multiple">
+                {course?.map((v) => (
+                  <Select.Option value={v?._id}>{v?.title}</Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            {/* <Form.Item
               label="Title"
               name="title"
               rules={[{ required: true, message: "title is requried" }]}
@@ -475,7 +498,7 @@ const [document, setDocument] = useState("")
                   </p>
                 </Upload.Dragger>
               </Form.Item>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item className="text-right pt-3">
               <Button onClick={modalClose} className="mr-2">
@@ -498,7 +521,7 @@ const [document, setDocument] = useState("")
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Update Episode
+            Update Course
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -584,4 +607,4 @@ const [document, setDocument] = useState("")
   );
 };
 
-export default Episodes;
+export default ExploreCourse;

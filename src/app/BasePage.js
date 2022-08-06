@@ -5,6 +5,8 @@ import Categoty from "./pages/Categoty";
 import Course from "./pages/Course";
 import { DashboardPage } from "./pages/DashboardPage";
 import Episodes from "./pages/Episodes";
+import Explore from "./pages/Explore";
+import ExploreCourse from "./pages/ExploreCourse";
 import Feature from "./pages/Feature";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Support from "./pages/Support";
@@ -30,6 +32,8 @@ export default function BasePage() {
         <ContentRoute path="/users" component={Usera} />
         <ContentRoute path="/episodes" component={Episodes} />
         <ContentRoute path="/category" component={Categoty} />
+        <ContentRoute path="/explore/:id" component={Explore} />
+        <ContentRoute path="/explore-episodes/:id" component={ExploreCourse} />
         <ContentRoute path="/feature/:id" component={Feature} />
         <ContentRoute path="/time" component={Time} />
         <ContentRoute path="/privacy-policy" component={PrivacyPolicy} />
