@@ -31,6 +31,7 @@ import {
   TimePicker,
 } from "antd";
 import { ErrorToast, SuccessToast } from "../../helpers/Toast";
+import { ka } from "date-fns/locale";
 
 const Time = () => {
     const location = useLocation()
@@ -43,7 +44,7 @@ const Time = () => {
   console.log("checkedList", checkedList);
 
   const getData = async () => {
-    await ApiGet(`/admin/episode/get`)
+    await ApiGet(`/admin/episode/get_${location?.search?.split("=")[1]}`)
       .then((res) => {
         console.log("res", res);
         setepisodeList(res?.data?.data);
@@ -52,6 +53,8 @@ const Time = () => {
       .catch((e) => {
         console.log("e", e);
       });
+
+
   };
 
   useEffect(() => {
@@ -62,11 +65,21 @@ const Time = () => {
     // if (apiFlag?.length > 3) {
     //   ErrorToast("You have only 4 course limit!");
     // } else {
-
-    setCheckedList([...checkedList, v?._id])
+      setCheckedList([...checkedList, v?._id])
+let changeedData = episodeList?.map((k) => {
+  if (k?._id == v?._id) {
+    return { ...k, isMorning: e.target.checked ? 1 : 0 };
+  } else {
+    return k;
+  }
+});
+console.log("changeedData", changeedData);
+setepisodeList(changeedData);
       
     // }
   };
+
+  console.log("episodeList", episodeList);
 
   const save = async() => {
    for(let v=0; v<checkedList?.length; v++){
@@ -121,7 +134,7 @@ const Time = () => {
                   <td>
                     <input
                       type="checkbox"
-                    //   checked={v?.isFeatured}
+                      checked={(v?.isMorning ==1|| v?.isNight ==1 || v?.isAfternoon == 1) ? true : false}
                       onChange={(e) => handleChecked(e, v)}
                     />
                   </td>
