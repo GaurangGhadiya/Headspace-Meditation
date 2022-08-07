@@ -14,7 +14,7 @@ import {
   ApiPut,
   Bucket,
 } from "../../helpers/API/ApiData";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import {
   Form,
@@ -64,6 +64,7 @@ const Expplore = () => {
   const [image, setimage] = useState("");
 
   const history = useHistory();
+  const location = useLocation();
 
   const getData = async () => {
     const body = {
@@ -282,16 +283,21 @@ const Expplore = () => {
     <div className="card card-custom gutter-b">
       <div className="card-header">
         <div className="card-title">
-          <h3 className="card-label">Explore Category list</h3>
+          <h3 className="card-label text-capitalize">
+            {" "}
+            {location.search?.split("=")[1]} Explore Category list
+          </h3>
         </div>
         <div className="card-toolbar">
-         {data?.length <= 7 && <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => setadd(true)}
-          >
-            Add Items
-          </button>}
+          {data?.length <= 7 && (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => setadd(true)}
+            >
+              Add Items
+            </button>
+          )}
         </div>
       </div>
       <div className="card-body">
