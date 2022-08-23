@@ -49,10 +49,12 @@ const Time = () => {
 
   const getData = async () => {
     await ApiGet(`/admin/episode/get_${location?.search?.split("=")[1]}`)
-      .then((res) => {
+      .then(async(res) => {
         console.log("res", res);
-        setepisodeList(res?.data?.data);
-        setFirst(res?.data?.data?.filter((v) => v?.isMorning == 1));
+       await setFirst(
+         res?.data?.data?.filter((v) => v?.isMorning == 1 || v?.isAfternoon == 1 || v?.isNight == 1)
+       );
+       await setepisodeList(res?.data?.data);
         // setApiFlag(res?.data?.data?.filter((v) => v?.isFeatured == true));
       })
       .catch((e) => {
@@ -159,7 +161,10 @@ console.log("first", first);
           className="w-40"
           onChange={onChange}
           onSearch={onSearch}
-          defaultValue={{ value: first?.[0]?._id, label: first?.[0]?.title }}
+          value={{
+            value: first?.[0]?._id,
+            label: first?.[0]?.title,
+          }}
           filterOption={(input, option) =>
             option.children.toLowerCase().includes(input.toLowerCase())
           }
@@ -177,7 +182,7 @@ console.log("first", first);
             className="w-40"
             onChange={onChange2}
             onSearch={onSearch}
-            defaultValue={{ value: first?.[1]?._id, label: first?.[1]?.title }}
+            value={{ value: first?.[1]?._id, label: first?.[1]?.title }}
             filterOption={(input, option) =>
               option.children.toLowerCase().includes(input.toLowerCase())
             }
