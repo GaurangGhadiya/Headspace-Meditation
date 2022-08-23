@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
 // import AddVideo from "./AddVideo";
 // import UpdateVideo from "./UpdateVideo";
@@ -6,6 +6,8 @@ import SVG from "react-inlinesvg";
 import axios from "axios";
 import { toAbsoluteUrl } from "../../_metronic/_helpers";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { Select } from "antd";
+
 
 import {
   ApiDelete,
@@ -21,7 +23,7 @@ import {
   Input,
   // Button,
   Checkbox,
-  Select,
+  // Select,
   InputNumber,
   Col,
   Row,
@@ -34,10 +36,12 @@ import { ErrorToast, SuccessToast } from "../../helpers/Toast";
 import { ka } from "date-fns/locale";
 
 const Time = () => {
-    const location = useLocation()
-    console.log("location", location);
+  const { Option } = Select;
+  const location = useLocation()
+  console.log("location", location);
   const [episodeList, setepisodeList] = useState([]);
   const [checkedList, setCheckedList] = useState([])
+  const [first, setFirst] = useState([])
   const [apiFlag, setApiFlag] = useState([]);
 
   const history = useHistory();
@@ -48,6 +52,7 @@ const Time = () => {
       .then((res) => {
         console.log("res", res);
         setepisodeList(res?.data?.data);
+        setFirst(res?.data?.data?.filter((v) => v?.isMorning == 1));
         // setApiFlag(res?.data?.data?.filter((v) => v?.isFeatured == true));
       })
       .catch((e) => {
@@ -82,25 +87,53 @@ setepisodeList(changeedData);
   console.log("episodeList", episodeList);
 
   const save = async() => {
-   for(let v=0; v<checkedList?.length; v++){
-    const body = {
-      episodeId: checkedList[v],
-    };
-    ApiPut(`/admin/episode/${location?.search?.split("=")[1]}/add`, body)
-      .then((res) => {
-        console.log("res", res);
-        getData();
-        // setepisodeList(res?.data?.data);
-        if (v == checkedList?.length-1){
-            SuccessToast(`Meditation added in ${location?.search?.split("=")[1]}`);
-        }
-          
-      })
-      .catch((e) => {
-        console.log("e", e);
-      });
+    let session = location?.search?.split("=")[1];
+   if (
+     (session == "morning" && checkedList?.length == 2) ||
+     session == "afternoon" ||
+     session == "night"
+   ) {
+     const body = {};
+     if (location?.search?.split("=")[1] == "morning") {
+       body.episodeIds = checkedList;
+     } else {
+       body.episodeId = checkedList[0];
+     }
+     ApiPut(`/admin/episode/${location?.search?.split("=")[1]}/add`, body)
+       .then((res) => {
+         console.log("res", res);
+         getData();
+         SuccessToast(`Meditation added in ${location?.search?.split("=")[1]}`);
+       })
+       .catch((e) => {
+         console.log("e", e);
+       });
+   } else {
+     ErrorToast("Both Fields are requried!");
    }
   }
+  const onChange = (value) => {
+    // setCheckedList([...checkedList, value]);
+    checkedList[0] = value
+  console.log(`selected ${value}`);
+};
+  const onChange2 = (value) => {
+    // setCheckedList([...checkedList, value]);
+    checkedList[1] = value
+  console.log(`selected ${value}`);
+};
+
+const onSearch = (value) => {
+  console.log('search:', value);
+};
+
+// const first = useMemo(
+//   () => episodeList?.length > 0 && episodeList?.filter((v) => v?.isMorning == 1),
+//   [episodeList]
+// );
+
+
+console.log("first", first);
 
   return (
     <div className="card card-custom gutter-b">
@@ -118,8 +151,43 @@ setepisodeList(changeedData);
           </button>
         </div>
       </div>
-      <div className="card-body">
-        <Table responsive>
+      <div className="card-body d-flex justify-content-around">
+        <Select
+          showSearch
+          placeholder="Select a episode"
+          optionFilterProp="children"
+          className="w-40"
+          onChange={onChange}
+          onSearch={onSearch}
+          defaultValue={{ value: first?.[0]?._id, label: first?.[0]?.title }}
+          filterOption={(input, option) =>
+            option.children.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {episodeList?.map((v) => {
+            return <Option value={v?._id}>{v?.title}</Option>;
+          })}
+        </Select>
+
+        {location?.search?.split("=")[1] == "morning" && (
+          <Select
+            showSearch
+            placeholder="Select a episode"
+            optionFilterProp="children"
+            className="w-40"
+            onChange={onChange2}
+            onSearch={onSearch}
+            defaultValue={{ value: first?.[1]?._id, label: first?.[1]?.title }}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().includes(input.toLowerCase())
+            }
+          >
+            {episodeList?.map((v) => {
+              return <Option value={v?._id}>{v?.title}</Option>;
+            })}
+          </Select>
+        )}
+        {/* <Table responsive>
           <thead>
             <tr>
               <th>Episode </th>
@@ -144,7 +212,7 @@ setepisodeList(changeedData);
               );
             })}
           </tbody>
-        </Table>
+        </Table> */}
       </div>
     </div>
   );
