@@ -12,10 +12,10 @@
 # redactor
 /.idea
 
-# assets
-/public/media
-/src/_metronic/_assets/js
-/src/_metronic/_assets/plugins
+# # assets
+# /public/media
+# /src/_metronic/_assets/js
+# /src/_metronic/_assets/plugins
 
 
 # production
