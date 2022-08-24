@@ -40,21 +40,25 @@ const Time = () => {
   console.log("location", location);
   const [episodeList, setepisodeList] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
+  const [checkedList2, setCheckedList2] = useState([]);
   const [first, setFirst] = useState([]);
   const [apiFlag, setApiFlag] = useState([]);
 
   const history = useHistory();
-  console.log("checkedList", checkedList);
 
   const getData = async () => {
     await ApiGet(`/admin/episode/get_${location?.search?.split("=")[1]}`)
       .then(async (res) => {
         console.log("res", res);
-        await setFirst(
+        await setCheckedList(
           res?.data?.data?.filter(
             (v) => v?.isMorning == 1 || v?.isAfternoon == 1 || v?.isNight == 1
           )
         );
+        const bbb = res?.data?.data?.filter(
+            (v) => v?.isMorning == 1 || v?.isAfternoon == 1 || v?.isNight == 1
+          )
+          await setCheckedList2([bbb[1]])
         await setepisodeList(res?.data?.data);
         // setApiFlag(res?.data?.data?.filter((v) => v?.isFeatured == true));
       })
@@ -90,16 +94,17 @@ const Time = () => {
   const save = async () => {
     let session = location?.search?.split("=")[1];
     if (
-      (session == "morning" && checkedList?.length == 2) ||
+      (session == "morning" && checkedList?.length == 1 && checkedList2?.length == 1) ||
       session == "afternoon" ||
       session == "night"
     ) {
       const body = {};
       if (location?.search?.split("=")[1] == "morning") {
-        body.episodeIds = checkedList;
+        body.episodeIds = [checkedList[0]?._id,checkedList2[0]?._id];
       } else {
         body.episodeId = checkedList[0];
       }
+      console.log("body",body);
       ApiPut(`/admin/episode/${location?.search?.split("=")[1]}/add`, body)
         .then((res) => {
           console.log("res", res);
@@ -117,12 +122,16 @@ const Time = () => {
   };
   const onChange = (value) => {
     // setCheckedList([...checkedList, value]);
-    checkedList[0] = value;
+    const dummy = episodeList?.filter(e => e?._id === value)
+    setCheckedList(dummy);
     console.log(`selected ${value}`);
   };
+  
+  console.log("checkedList", checkedList,checkedList2);
   const onChange2 = (value) => {
-    // setCheckedList([...checkedList, value]);
-    checkedList[1] = value;
+    const dummy = episodeList?.filter(e => e?._id === value)
+    setCheckedList2(dummy);
+    // checkedList[1] = value;
     console.log(`selected ${value}`);
   };
 
@@ -161,6 +170,7 @@ const Time = () => {
           className="w-40"
           onChange={onChange}
           onSearch={onSearch}
+          value={checkedList[0]?._id}
           defaultValue={{
             value: first?.[0]?._id,
             label: first?.[0]?.title,
@@ -182,6 +192,7 @@ const Time = () => {
             className="w-40"
             onChange={onChange2}
             onSearch={onSearch}
+            value={checkedList2[0]?._id}
             defaultValue={{ value: first?.[1]?._id, label: first?.[1]?.title }}
             filterOption={(input, option) =>
               option.children.toLowerCase().includes(input.toLowerCase())
