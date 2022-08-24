@@ -102,7 +102,7 @@ const Time = () => {
       if (location?.search?.split("=")[1] == "morning") {
         body.episodeIds = [checkedList[0]?._id,checkedList2[0]?._id];
       } else {
-        body.episodeId = checkedList[0];
+        body.episodeId = checkedList[0]?._id;
       }
       console.log("body",body);
       ApiPut(`/admin/episode/${location?.search?.split("=")[1]}/add`, body)
