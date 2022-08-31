@@ -257,7 +257,9 @@ getData(e.target.value);
       image: image,
       description: values?.description,
       courseId: updateData?._id,
-      categoryId: values?.category,
+      categoryId: values?.category?.length <= 10 ? category?.find(
+        (v) => v?.name == values?.category
+      )?._id : values?.category,
     };
     ApiPut("/admin/course/update", body).then(async (res) => {
       console.log("res add", res);
