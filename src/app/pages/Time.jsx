@@ -1,10 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Button, Modal, Table } from "react-bootstrap";
-// import AddVideo from "./AddVideo";
-// import UpdateVideo from "./UpdateVideo";
-import SVG from "react-inlinesvg";
-import axios from "axios";
-import { toAbsoluteUrl } from "../../_metronic/_helpers";
+import React, { useState, useEffect } from "react";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 
@@ -17,39 +11,22 @@ import {
 } from "../../helpers/API/ApiData";
 import { useHistory, useLocation } from "react-router-dom";
 
-import {
-  Form,
-  Input,
-  // Button,
-  Checkbox,
-  // Select,
-  InputNumber,
-  Col,
-  Row,
-  Radio,
-  Upload,
-  DatePicker,
-  TimePicker,
-} from "antd";
 import { ErrorToast, SuccessToast } from "../../helpers/Toast";
 import { ka } from "date-fns/locale";
 
 const Time = () => {
   const { Option } = Select;
   const location = useLocation();
-  console.log("location", location);
   const [episodeList, setepisodeList] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
   const [checkedList2, setCheckedList2] = useState([]);
   const [first, setFirst] = useState([]);
   const [apiFlag, setApiFlag] = useState([]);
 
-  const history = useHistory();
 
   const getData = async () => {
     await ApiGet(`/admin/episode/get_${location?.search?.split("=")[1]}`)
       .then(async (res) => {
-        console.log("res", res);
         await setCheckedList(
           res?.data?.data?.filter(
             (v) => v?.isMorning == 1 || v?.isAfternoon == 1 || v?.isNight == 1
@@ -70,11 +47,7 @@ const Time = () => {
   useEffect(() => {
     getData();
   }, []);
-  console.log("apiFlag", apiFlag);
   const handleChecked = async (e, v) => {
-    // if (apiFlag?.length > 3) {
-    //   ErrorToast("You have only 4 course limit!");
-    // } else {
     setCheckedList([...checkedList, v?._id]);
     let changeedData = episodeList?.map((k) => {
       if (k?._id == v?._id) {
@@ -83,13 +56,11 @@ const Time = () => {
         return k;
       }
     });
-    console.log("changeedData", changeedData);
     setepisodeList(changeedData);
 
     // }
   };
 
-  console.log("episodeList", episodeList);
 
   const save = async () => {
     let session = location?.search?.split("=")[1];
@@ -104,10 +75,8 @@ const Time = () => {
       } else {
         body.episodeId = checkedList[0]?._id;
       }
-      console.log("body",body);
       ApiPut(`/admin/episode/${location?.search?.split("=")[1]}/add`, body)
         .then((res) => {
-          console.log("res", res);
           getData();
           SuccessToast(
             `Meditation added in ${location?.search?.split("=")[1]}`
@@ -121,30 +90,20 @@ const Time = () => {
     }
   };
   const onChange = (value) => {
-    // setCheckedList([...checkedList, value]);
     const dummy = episodeList?.filter(e => e?._id === value)
     setCheckedList(dummy);
-    console.log(`selected ${value}`);
   };
   
-  console.log("checkedList", checkedList,checkedList2);
   const onChange2 = (value) => {
     const dummy = episodeList?.filter(e => e?._id === value)
     setCheckedList2(dummy);
-    // checkedList[1] = value;
-    console.log(`selected ${value}`);
   };
 
   const onSearch = (value) => {
     console.log("search:", value);
   };
 
-  // const first = useMemo(
-  //   () => episodeList?.length > 0 && episodeList?.filter((v) => v?.isMorning == 1),
-  //   [episodeList]
-  // );
 
-  console.log("first", first);
 
   return (
     <div className="card card-custom gutter-b">
@@ -203,32 +162,7 @@ const Time = () => {
             })}
           </Select>
         )}
-        {/* <Table responsive>
-          <thead>
-            <tr>
-              <th>Episode </th>
-              <th>Title</th>
-             
-            </tr>
-          </thead>
-          <tbody>
-            {episodeList?.map((v) => {
-              return (
-                <tr>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={(v?.isMorning ==1|| v?.isNight ==1 || v?.isAfternoon == 1) ? true : false}
-                      onChange={(e) => handleChecked(e, v)}
-                    />
-                  </td>
-                  <td>{v.title}</td>
-                 
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table> */}
+       
       </div>
     </div>
   );
