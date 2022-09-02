@@ -5,7 +5,7 @@ import { Button, Modal, Table } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import axios from "axios";
 import { toAbsoluteUrl } from "../../_metronic/_helpers";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
 
 import {
   ApiDelete,
@@ -19,40 +19,11 @@ import { useHistory } from "react-router-dom";
 import {
   Form,
   Input,
-  // Button,
-  Checkbox,
   Select,
-  InputNumber,
-  Col,
-  Row,
-  Radio,
   Upload,
-  DatePicker,
-  TimePicker,
 } from "antd";
 import { SuccessToast } from "../../helpers/Toast";
 import Search from "antd/lib/transfer/search";
-
-const data1 = [
-  {
-    title: "Love Song",
-    description: "This is love songs",
-    number: "5",
-    date: "11/01/2022",
-  },
-  {
-    title: "Sad Song",
-    description: "This is Sad songs",
-    number: "2",
-    date: "15/01/2022",
-  },
-  {
-    title: "Happy Song",
-    description: "This is Happy songs",
-    number: "45",
-    date: "14/02/2022",
-  },
-];
 
 const Course = () => {
   const [category, setCategory] = useState([])
@@ -72,7 +43,6 @@ const [search, setSearch] = useState("")
     };
     await ApiPost("/admin/course/search", body)
       .then((res) => {
-        console.log("res", res);
         setdata(res?.data?.data);
       })
       .catch((e) => {
@@ -80,7 +50,6 @@ const [search, setSearch] = useState("")
       });
     await ApiGet("/admin/category")
       .then((res) => {
-        console.log("res", res);
         setCategory(res?.data?.data);
       })
       .catch((e) => {
@@ -100,7 +69,6 @@ getData(e.target.value);
     setvideoId(v);
     await ApiGet(`/admin/course/${v}`)
       .then((res) => {
-        console.log("res", res);
         setupdateData(res?.data?.data);
         setimage(res?.data?.data?.image);
 
@@ -119,8 +87,6 @@ getData(e.target.value);
       SuccessToast(res?.data?.message);
 
         getData(search);
-        console.log("res", res);
-        // setupdateData(res?.data?.data);
       })
       .catch((e) => {
         console.log("e", e);
@@ -171,24 +137,13 @@ getData(e.target.value);
         uid: "1",
         name: "",
         status: "done",
-        // response: "Server Error 500", // custom error message to show
         url: updateData?.image,
       },
     ],
-    // action: "https://jitsi.api.pip-idea.tk/admin/upload/compress_image/profile",
     customRequest: (options) => {
       const data = new FormData();
       data.append("image", options.file);
 
-      // ApiPost("/upload/compress_image/profile", data)
-      //   .then((res) => {
-      //     console.log("res", res);
-      //     setimage(res?.data?.data?.image);
-      //     options.onSuccess(res.data, options.file);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
 
       let headers = {
         Authorization: JSON.parse(localStorage.getItem("userinfo"))?.token,
@@ -198,7 +153,6 @@ getData(e.target.value);
           headers: headers,
         })
         .then((res) => {
-          console.log("res image", res);
           setimage(res?.data?.data?.image);
           options.onSuccess(res.data, options.file);
         })
@@ -215,7 +169,6 @@ getData(e.target.value);
     },
   };
   const normFile = (e) => {
-    console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -223,7 +176,6 @@ getData(e.target.value);
   };
 
   const normFile2 = (e) => {
-    console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -231,7 +183,6 @@ getData(e.target.value);
   };
 
   const onFinish = (values) => {
-    console.log("Success1:", values);
 
     const body = {
       title: values?.title,
@@ -241,7 +192,6 @@ getData(e.target.value);
       categoryId :values?.category
     };
     ApiPost("/admin/course/add", body).then(async (res) => {
-      console.log("res add", res);
       SuccessToast(res?.data?.message);
       await getData(search);
       setaddData(values);
@@ -250,7 +200,6 @@ getData(e.target.value);
   };
 
   const onFinish2 = (values) => {
-    console.log("Success:", values);
 
     const body = {
       title: values?.title,
