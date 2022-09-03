@@ -200,13 +200,13 @@ getData(e.target.value);
   };
 
   const onFinish2 = (values) => {
-
+    console.log("values", values, category);
     const body = {
       title: values?.title,
       image: image,
       description: values?.description,
       courseId: updateData?._id,
-      categoryId: values?.category?.length <= 10 ? category?.find(
+      categoryId: values?.category?.length <= 13 ? category?.find(
         (v) => v?.name == values?.category
       )?._id : values?.category,
     };
