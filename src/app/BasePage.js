@@ -13,6 +13,7 @@ import Support from "./pages/Support";
 import TermsCondition from "./pages/TermsCondition";
 import Time from "./pages/Time";
 import Usera from "./pages/Usera";
+import Notification from "./pages/Notification";
 
 export default function BasePage() {
   // useEffect(() => {
@@ -36,6 +37,7 @@ export default function BasePage() {
         <ContentRoute path="/explore-episodes/:id" component={ExploreCourse} />
         <ContentRoute path="/feature/:id" component={Feature} />
         <ContentRoute path="/time" component={Time} />
+        <ContentRoute path="/notification" component={Notification} />
         <ContentRoute path="/privacy-policy" component={PrivacyPolicy} />
         <ContentRoute path="/support" component={Support} />
         <ContentRoute path="/terms-condition" component={TermsCondition} />
