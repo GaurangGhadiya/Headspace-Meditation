@@ -1,36 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
-// import AddVideo from "./AddVideo";
-// import UpdateVideo from "./UpdateVideo";
-import SVG from "react-inlinesvg";
-import axios from "axios";
-import { toAbsoluteUrl } from "../../_metronic/_helpers";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
-import {
-  ApiDelete,
-  ApiGet,
-  ApiPost,
-  ApiPut,
-  Bucket,
-} from "../../helpers/API/ApiData";
 import { useHistory, useLocation } from "react-router-dom";
 
-import {
-  Form,
-  Input,
-  // Button,
-  Checkbox,
-  Select,
-  InputNumber,
-  Col,
-  Row,
-  Radio,
-  Upload,
-  DatePicker,
-  TimePicker,
-} from "antd";
-import { ErrorToast, SuccessToast } from "../../helpers/Toast";
+import {  SuccessToast } from "../../helpers/Toast";
 import Search from "antd/lib/transfer/search";
 
 

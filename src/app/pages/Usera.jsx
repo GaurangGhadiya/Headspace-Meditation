@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { ApiPost, ApiPut } from "../../helpers/API/ApiData";
-import { getHandlerTableChange, toAbsoluteUrl } from "../../_metronic/_helpers";
+import {  toAbsoluteUrl } from "../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 
 
@@ -122,21 +122,6 @@ const Usera = () => {
                         </div>
                       )}
                     </td>
-                    {/* <td>
-                      {v?.isUserPremium ? (
-                        <div class="d-flex align-items-center ddd">
-                          <span class="label label-lg label-light-success label-inline">
-                            Premium
-                          </span>
-                        </div>
-                      ) : (
-                        <div class="d-flex align-items-center ddd">
-                          <span class="label label-lg label-light-danger label-inline">
-                            Not Premium
-                          </span>
-                        </div>
-                      )}
-                    </td> */}
                     <td>
                       <a
                         title="Change status"
