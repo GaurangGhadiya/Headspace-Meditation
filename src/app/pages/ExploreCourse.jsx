@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
-// import AddVideo from "./AddVideo";
-// import UpdateVideo from "./UpdateVideo";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../_metronic/_helpers";
 import { ApiDelete, ApiGet, ApiPost, ApiPut } from "../../helpers/API/ApiData";
